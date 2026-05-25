@@ -1,38 +1,64 @@
-# .NET 8 Web API Starter (Swagger Ready)
+# .NET Clean Architecture Starter
 
-Seed project for a simple controller-based **.NET 8 Web API** with health and in-memory todos endpoints.
+A small **.NET 8 Web API** starter that demonstrates clean architecture with a simple, easy-to-follow structure.
 
-## Features
+The sample uses a basic todos feature to keep the code easy to follow. The main point is the project structure: domain rules, application use cases, infrastructure, and HTTP concerns are kept in separate layers.
 
-- Controller-first setup (no minimal API magic)
-- Health check (`/api/health`) plus CRUD todos (`/api/todos`)
-- Swagger/OpenAPI always on
-- Ready-to-use Dockerfile (exposes `8080`)
-- Clean `.gitignore` and small, readable codebase
+## Architecture
 
----
+```text
+WebApi ───────────────┐
+                      v
+Infrastructure ──> Application ──> Domain
+```
+
+The dependency direction is:
+
+- `Domain` has no dependency on any other project.
+- `Application` depends on `Domain` and defines use cases plus repository contracts.
+- `Infrastructure` implements application contracts, currently with an in-memory repository.
+- `WebApi` handles HTTP concerns and delegates work to application services.
 
 ## Project Layout
 
 ```text
-dotnetcore-starter-template/
+dotnet-clean-architecture-starter/
 ├─ Dockerfile
 ├─ README.md
-├─ dotnetcore-starter-template.sln
+├─ dotnet-clean-architecture-starter.sln
 └─ src/
+   ├─ Domain/
+   │  ├─ Common/
+   │  │  └─ DomainException.cs
+   │  └─ Entities/
+   │     └─ TodoItem.cs
+   ├─ Application/
+   │  ├─ Common/
+   │  │  └─ Result.cs
+   │  └─ Todos/
+   │     ├─ ITodoRepository.cs
+   │     ├─ ITodoService.cs
+   │     ├─ TodoService.cs
+   │     └─ *.cs command and DTO contracts
+   ├─ Infrastructure/
+   │  └─ Persistence/
+   │     └─ InMemoryTodoRepository.cs
    └─ WebApi/
       ├─ Controllers/
       │  ├─ HealthController.cs
       │  └─ TodosController.cs
-      ├─ Models/
-      │  └─ Todo.cs
       ├─ Program.cs
-      ├─ WebApi.csproj
-      ├─ appsettings.json
-      └─ appsettings.Development.json
+      └─ WebApi.csproj
 ```
 
----
+## What It Shows
+
+- `Domain` contains entity behavior and validation.
+- `Application` contains use cases and does not reference ASP.NET Core.
+- `Infrastructure` contains the repository implementation.
+- `WebApi` contains controllers, Swagger, and dependency wiring.
+- The current persistence layer is in-memory so the example stays small.
+- Docker is included for a simple container build.
 
 ## Run Locally
 
@@ -41,28 +67,39 @@ dotnet restore
 dotnet run --project src/WebApi/WebApi.csproj
 ```
 
-The API listens on `http://localhost:5000` (set via `UseUrls`). Swagger UI: `http://localhost:5000/swagger`.
+Then open:
 
----
+- API: `http://localhost:5000`
+- Swagger UI: `http://localhost:5000/swagger`
+
+If your machine uses a different ASP.NET Core URL, use the URL printed by `dotnet run`.
 
 ## Run with Docker
 
 ```bash
-docker build -t dotnetcore-starter-template .
-docker run -d -p 8080:8080 --name dotnetcore-api dotnetcore-starter-template
+docker build -t dotnet-clean-architecture-starter .
+docker run -d -p 8080:8080 --name dotnet-clean-api dotnet-clean-architecture-starter
 ```
 
-Inside the container the app binds to `http://+:8080`, so you'll hit it at `http://localhost:8080`.
-
----
+Inside the container the app binds to `http://+:8080`, so use `http://localhost:8080/swagger`.
 
 ## Endpoints
 
-- `GET /api/health` — status + UTC timestamp
-- `GET /api/todos` — list all todos
-- `GET /api/todos/{id}` — fetch by id
-- `POST /api/todos` — create (`{ "title": "Buy milk" }`)
-- `PUT /api/todos/{id}` — update title/completed
-- `DELETE /api/todos/{id}` — remove
+- `GET /api/health` returns status and UTC timestamp.
+- `GET /api/todos` lists todos.
+- `GET /api/todos/{id}` fetches one todo.
+- `POST /api/todos` creates a todo.
+- `PUT /api/todos/{id}` updates title and/or completion.
+- `DELETE /api/todos/{id}` removes a todo.
 
-Happy coding!
+Example create request:
+
+```json
+{
+  "title": "Write an architecture decision record"
+}
+```
+
+## Notes
+
+The in-memory repository is just a placeholder. To add a database, create another `ITodoRepository` implementation in `Infrastructure` and update the dependency registration.

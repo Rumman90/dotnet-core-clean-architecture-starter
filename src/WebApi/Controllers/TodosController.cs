@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models;
+using Application.Todos;
 
 namespace WebApi.Controllers;
 
@@ -7,74 +7,82 @@ namespace WebApi.Controllers;
 [Route("api/[controller]")]
 public class TodosController : ControllerBase
 {
-    // Demo ke liye in-memory static list
-    private static readonly List<Todo> Todos = new()
-    {
-        new Todo { Id = 1, Title = "Sample todo 1", Completed = false },
-        new Todo { Id = 2, Title = "Sample todo 2", Completed = true }
-    };
+    private readonly ITodoService todoService;
 
-    // GET api/todos
+    public TodosController(ITodoService todoService)
+    {
+        this.todoService = todoService;
+    }
+
     [HttpGet]
-    public ActionResult<IEnumerable<Todo>> Get()
+    public async Task<ActionResult<IReadOnlyCollection<TodoDto>>> Get(CancellationToken cancellationToken)
     {
-        return Ok(Todos);
+        var todos = await todoService.ListAsync(cancellationToken);
+        return Ok(todos);
     }
 
-    // GET api/todos/1
     [HttpGet("{id:int}")]
-    public ActionResult<Todo> GetById(int id)
+    public async Task<ActionResult<TodoDto>> GetById(int id, CancellationToken cancellationToken)
     {
-        var todo = Todos.FirstOrDefault(t => t.Id == id);
-        if (todo == null) return NotFound();
-        return Ok(todo);
-    }
-
-    // POST api/todos
-    [HttpPost]
-    public ActionResult<Todo> Create([FromBody] CreateTodoRequest request)
-    {
-        var nextId = Todos.Any() ? Todos.Max(t => t.Id) + 1 : 1;
-        var todo = new Todo
+        var todo = await todoService.GetByIdAsync(id, cancellationToken);
+        if (todo is null)
         {
-            Id = nextId,
-            Title = request.Title,
-            Completed = false
-        };
-
-        Todos.Add(todo);
-
-        return CreatedAtAction(nameof(GetById), new { id = todo.Id }, todo);
-    }
-
-    // PUT api/todos/1
-    [HttpPut("{id:int}")]
-    public ActionResult<Todo> Update(int id, [FromBody] UpdateTodoRequest request)
-    {
-        var todo = Todos.FirstOrDefault(t => t.Id == id);
-        if (todo == null) return NotFound();
-
-        if (!string.IsNullOrWhiteSpace(request.Title))
-            todo.Title = request.Title;
-
-        if (request.Completed.HasValue)
-            todo.Completed = request.Completed.Value;
+            return NotFound();
+        }
 
         return Ok(todo);
     }
 
-    // DELETE api/todos/1
-    [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    [HttpPost]
+    public async Task<ActionResult<TodoDto>> Create(
+        [FromBody] CreateTodoRequest request,
+        CancellationToken cancellationToken)
     {
-        var todo = Todos.FirstOrDefault(t => t.Id == id);
-        if (todo == null) return NotFound();
+        var result = await todoService.CreateAsync(new CreateTodoCommand(request.Title), cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new ProblemDetails { Title = result.Error });
+        }
 
-        Todos.Remove(todo);
+        return CreatedAtAction(nameof(GetById), new { id = result.Value!.Id }, result.Value);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<TodoDto>> Update(
+        int id,
+        [FromBody] UpdateTodoRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await todoService.UpdateAsync(
+            id,
+            new UpdateTodoCommand(request.Title, request.Completed),
+            cancellationToken);
+
+        if (!result.IsSuccess && result.Error == "Todo was not found.")
+        {
+            return NotFound();
+        }
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new ProblemDetails { Title = result.Error });
+        }
+
+        return Ok(result.Value);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    {
+        var result = await todoService.DeleteAsync(id, cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 
-    // DTOs for requests
     public class CreateTodoRequest
     {
         public string Title { get; set; } = string.Empty;
