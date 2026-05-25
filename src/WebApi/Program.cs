@@ -12,9 +12,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Clean Architecture Starter API",
+        Title = ".NET Core Clean Architecture Starter API",
         Version = "v1",
-        Description = "A small .NET 8 Web API that separates Domain, Application, Infrastructure, and WebApi concerns."
+        Description = "A small .NET Core Web API that separates Domain, Application, Infrastructure, and WebApi concerns."
     });
 });
 
@@ -23,7 +23,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clean Architecture Starter API v1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", ".NET Core Clean Architecture Starter API v1");
 });
 
 app.UseRouting();

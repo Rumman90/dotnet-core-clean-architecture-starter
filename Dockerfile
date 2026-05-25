@@ -1,4 +1,4 @@
-# Simple multi-stage Dockerfile for .NET 8 Web API
+# Simple multi-stage Dockerfile for .NET Core Web API
 
 # 1. Base runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base

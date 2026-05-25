@@ -1,6 +1,6 @@
-# .NET Clean Architecture Starter
+# .NET Core Clean Architecture Starter
 
-A small **.NET 8 Web API** starter that demonstrates clean architecture with a simple, easy-to-follow structure.
+A small **.NET Core Web API** starter template that demonstrates clean architecture with a simple, easy-to-follow structure.
 
 The sample uses a basic todos feature to keep the code easy to follow. The main point is the project structure: domain rules, application use cases, infrastructure, and HTTP concerns are kept in separate layers.
 
@@ -22,10 +22,10 @@ The dependency direction is:
 ## Project Layout
 
 ```text
-dotnet-clean-architecture-starter/
+dotnet-core-clean-architecture-starter/
 ├─ Dockerfile
 ├─ README.md
-├─ dotnet-clean-architecture-starter.sln
+├─ dotnet-core-clean-architecture-starter.sln
 └─ src/
    ├─ Domain/
    │  ├─ Common/
@@ -77,8 +77,8 @@ If your machine uses a different ASP.NET Core URL, use the URL printed by `dotne
 ## Run with Docker
 
 ```bash
-docker build -t dotnet-clean-architecture-starter .
-docker run -d -p 8080:8080 --name dotnet-clean-api dotnet-clean-architecture-starter
+docker build -t dotnet-core-clean-architecture-starter .
+docker run -d -p 8080:8080 --name dotnet-core-api dotnet-core-clean-architecture-starter
 ```
 
 Inside the container the app binds to `http://+:8080`, so use `http://localhost:8080/swagger`.
