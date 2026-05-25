@@ -1,11 +1,11 @@
-using Application.Todos;
+using Services.Todos;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application;
+namespace Services;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<ITodoService, TodoService>();
         return services;

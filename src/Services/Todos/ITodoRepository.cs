@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Application.Todos;
+namespace Services.Todos;
 
 public interface ITodoRepository
 {

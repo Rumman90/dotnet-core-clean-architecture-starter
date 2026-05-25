@@ -1,8 +1,8 @@
-using Application.Common;
+using Services.Common;
 using Domain.Common;
 using Domain.Entities;
 
-namespace Application.Todos;
+namespace Services.Todos;
 
 public sealed class TodoService : ITodoService
 {

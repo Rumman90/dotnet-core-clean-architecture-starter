@@ -1,20 +1,20 @@
-using Application;
-using Infrastructure;
+using Data;
 using Microsoft.OpenApi.Models;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddServices();
+builder.Services.AddData();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = ".NET Core Clean Architecture Starter API",
         Version = "v1",
-        Description = "A small .NET Core Web API that separates Domain, Application, Infrastructure, and WebApi concerns."
+        Description = "A small .NET Core Web API that separates Domain, Services, Data, and WebApi concerns."
     });
 });
 

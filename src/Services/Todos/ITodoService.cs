@@ -1,6 +1,6 @@
-using Application.Common;
+using Services.Common;
 
-namespace Application.Todos;
+namespace Services.Todos;
 
 public interface ITodoService
 {

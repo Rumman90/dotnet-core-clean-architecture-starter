@@ -2,22 +2,22 @@
 
 A small **.NET Core Web API** starter template that demonstrates clean architecture with a simple, easy-to-follow structure.
 
-The sample uses a basic todos feature to keep the code easy to follow. The main point is the project structure: domain rules, application use cases, infrastructure, and HTTP concerns are kept in separate layers.
+The sample uses a basic todos feature to keep the code easy to follow. The main point is the project structure: domain rules, service logic, data access, and HTTP concerns are kept in separate layers.
 
 ## Architecture
 
 ```text
 WebApi ───────────────┐
                       v
-Infrastructure ──> Application ──> Domain
+Data ───────────> Services ────> Domain
 ```
 
 The dependency direction is:
 
 - `Domain` has no dependency on any other project.
-- `Application` depends on `Domain` and defines use cases plus repository contracts.
-- `Infrastructure` implements application contracts, currently with an in-memory repository.
-- `WebApi` handles HTTP concerns and delegates work to application services.
+- `Services` depends on `Domain` and contains todo logic plus repository contracts.
+- `Data` implements service contracts, currently with an in-memory repository.
+- `WebApi` handles HTTP concerns and delegates work to services.
 
 ## Project Layout
 
@@ -32,7 +32,7 @@ dotnet-core-clean-architecture-starter/
    │  │  └─ DomainException.cs
    │  └─ Entities/
    │     └─ TodoItem.cs
-   ├─ Application/
+   ├─ Services/
    │  ├─ Common/
    │  │  └─ Result.cs
    │  └─ Todos/
@@ -40,9 +40,8 @@ dotnet-core-clean-architecture-starter/
    │     ├─ ITodoService.cs
    │     ├─ TodoService.cs
    │     └─ *.cs command and DTO contracts
-   ├─ Infrastructure/
-   │  └─ Persistence/
-   │     └─ InMemoryTodoRepository.cs
+   ├─ Data/
+   │  └─ InMemoryTodoRepository.cs
    └─ WebApi/
       ├─ Controllers/
       │  ├─ HealthController.cs
@@ -54,10 +53,10 @@ dotnet-core-clean-architecture-starter/
 ## What It Shows
 
 - `Domain` contains entity behavior and validation.
-- `Application` contains use cases and does not reference ASP.NET Core.
-- `Infrastructure` contains the repository implementation.
+- `Services` contains todo logic and does not reference ASP.NET Core.
+- `Data` contains the repository implementation.
 - `WebApi` contains controllers, Swagger, and dependency wiring.
-- The current persistence layer is in-memory so the example stays small.
+- The current data store is in-memory so the example stays small.
 - Docker is included for a simple container build.
 
 ## Run Locally
@@ -96,10 +95,10 @@ Example create request:
 
 ```json
 {
-  "title": "Write an architecture decision record"
+  "title": "Pick up groceries"
 }
 ```
 
 ## Notes
 
-The in-memory repository is just a placeholder. To add a database, create another `ITodoRepository` implementation in `Infrastructure` and update the dependency registration.
+The in-memory repository is just a placeholder. To add a database, create another `ITodoRepository` implementation in `Data` and update the dependency registration.

@@ -10,9 +10,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
-COPY ["src/Application/Application.csproj", "src/Application/"]
+COPY ["src/Services/Services.csproj", "src/Services/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/Data/Data.csproj", "src/Data/"]
 RUN dotnet restore "src/WebApi/WebApi.csproj"
 
 COPY . .

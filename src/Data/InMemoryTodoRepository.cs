@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
-using Application.Todos;
+using Services.Todos;
 using Domain.Entities;
 
-namespace Infrastructure.Persistence;
+namespace Data;
 
 public sealed class InMemoryTodoRepository : ITodoRepository
 {

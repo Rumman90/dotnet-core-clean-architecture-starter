@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D53E8217-76B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{BBD228F6-0E48-4005-928A-9CBA1A336E39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{D31A9A93-5978-4487-A8A4-CF319B75BC53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "src\Services\Services.csproj", "{D31A9A93-5978-4487-A8A4-CF319B75BC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{B109E62E-2809-4F10-B733-7DDBAC4D0474}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "src\Data\Data.csproj", "{B109E62E-2809-4F10-B733-7DDBAC4D0474}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
