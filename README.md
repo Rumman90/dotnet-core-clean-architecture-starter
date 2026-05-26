@@ -102,3 +102,7 @@ Example create request:
 ## Notes
 
 The in-memory repository is just a placeholder. To add a database, create another `ITodoRepository` implementation in `Data` and update the dependency registration.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
